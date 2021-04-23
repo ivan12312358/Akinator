@@ -42,6 +42,7 @@ class Stack {
 			  int& operator[](int number);
 	////The function returns stack capacity////
 		int get_cap();
+		int get_size();
 };
 
 

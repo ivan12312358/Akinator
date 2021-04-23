@@ -1,0 +1,13 @@
+chlen
+No
+Zalupa
+big
+No
+No
+Andrey
+chel
+Yes
+No
+Kirill
+pudge
+Quit

@@ -277,10 +277,6 @@ const int& Stack::operator[](int number) const{
 	return elem_[number + canary_size/2];
 }
 
-int Stack::get_cap(){
-	return capacity_;
-}
-
 void time(const char* mode){
 
 	FILE* file = fopen("STACK_DUMP.log", mode);
@@ -306,4 +302,12 @@ void time(const char* mode){
 	}
 
 	fclose(file);
+}
+
+int Stack::get_size(){
+	return size_;
+}
+
+int Stack::get_cap(){
+	return capacity_;
 }
