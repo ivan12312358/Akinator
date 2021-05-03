@@ -10,9 +10,9 @@ int main (int argc, char* argv[])
 
 //	tree.Akinator ();
 
-	tree.Find ();
+//	tree.Find ();
 
-	tree.Graph(argv[1]);
+//	tree.Graph(argv[1]);
 
 //	tree.Compare ();
 
@@ -158,8 +158,8 @@ void Tree::Save (const char* filename)
 
 void Tree::Find ()
 {
-	//system ("echo \"Enter object that you want to find\" | festival --tts");	
-	//printf ("Enter object that you want to find:\n");
+	system ("echo \"Enter object that you want to find\" | festival --tts");	
+	printf ("Enter object that you want to find:\n");
 
 	char** path = nullptr;
 	int   size = Search (path);
@@ -261,8 +261,6 @@ int  Tree::Search (char**& path)
 
 	head_->search_ (str, &stk, mode);
 
-	stk.dump();
-
 	int size = stk.get_size ();
 
 	path = (char**) calloc (size + 1, sizeof(char*));
@@ -280,17 +278,11 @@ int  Tree::Search (char**& path)
 	for(int start = 0; start < size; start++)
 	{
 		if(stk[start] == 1)
-		{
 			curr = curr->right_;
-			path[start + 1] = curr->data_;
-		}
 		else if(stk[start] == -1)
-		{
-			path[start + 1] = (char*) calloc(SIZE, sizeof(char));
 			curr = curr->left_;
-			sprintf(path[start + 1], "Not %s", curr->data_);
-		}
 
+		path[start + 1] = curr->data_;
 	}
 
 	return size + 1;
