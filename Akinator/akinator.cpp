@@ -2,21 +2,27 @@
 #include "../Libraries/node.h"
 #include "../Libraries/akinator.h"
 
-//TODO func Save like Print but can change file
 
 int main (int argc, char* argv[])
 {
-	Tree tree(argv[1]);
-		
-//	tree.Akinator ();
+//	menu();
 
-//	tree.Find ();
+	Tree tree(argv[1]);
+
+	tree.Akinator();
 
 	tree.Graph(argv[1]);
 
-//	tree.Compare ();
+//	tree.Find();
+//	tree.Compare();
 
 	return 0;
+}
+//-------------------------------------------------------------------------------
+
+void menu()
+{
+
 }
 
 //-------------------------------------------------------------------------------
@@ -72,7 +78,14 @@ Tree::Tree (char* filename)
 
 Tree::~Tree ()
 {
-//	Save("base.log");
+	system ("echo \"Do you want to save base?\" | festival --tts ");
+	printf ("Do you want to save base? Type [Y/N]\n");
+
+	char str[SIZE] = "";
+	fgets(str, SIZE, stdin);
+
+	if(!strcmp(str, "Y\n"))
+		Save("saved.base");
 
 	assert (head_);
 
@@ -130,7 +143,7 @@ void Tree::Save ()
 	//system ("echo \"Where to save your database?\" | festival --tts");
 	printf ("Where to save your database?\n");
 
-	char str[SIZE];
+	char str[SIZE] = "";;
 	fgets (str, SIZE, stdin);
 
 	FILE*   f_dump = fopen (str, "w");
@@ -160,131 +173,99 @@ void Tree::Find ()
 	//system ("echo \"Enter object that you want to find\" | festival --tts");	
 	printf ("Enter object that you want to find:\n");
 
-	char** path = nullptr;
-	int   size = Search (path);
+	Stack stk;
 
-	if(size < 1)
-		return;
+	Search (&stk);
 
-	//system ("echo \"Object's path\" | festival --tts");
-	printf ("Object's path:\n");
+	int size = stk.get_size ();
+
+	Node* curr = head_;
 
 	for(int i = 0; i < size; i++)
-		printf ("{%s}  ", path[i]);
+	{
+		if(stk[i] == -1)
+		{
+			printf ("Not {%s}\n", curr->data_);
+			curr = curr->left_;
+		}
+		else if(stk[i] == 1)
+		{
+			printf ("{%s}\n", curr->data_);
+			curr = curr->right_;
+		}
+	}
+	printf("{%s}\n", curr->data_);
+}
 
-	printf ("\n");
+//-------------------------------------------------------------------------------
 
-	free (path);
+Node* Node::compare_(Stack& stk, int* diff)
+{
+	if(stk[*diff] == -1) printf("Not ");
+	printf("{%s}  ", data_);
+
+	if(stk[*diff] == -1) return left_;
+	else 				 return right_;
+
 }
 
 //-------------------------------------------------------------------------------
 
 void Tree::Compare ()
 {
-	//system("echo \"Enter objects that you want to compare\" | festival --tts");
+	//system("echo \"What to compare\" | festival --tts");
 	printf ("Enter objects that you want to compare:\n");
 
-	char** obj_1 = nullptr;
-	int	  size_1 = Search (obj_1);
+	Stack    stk1;
+	Search (&stk1);
+	int size1 = stk1.get_size ();
 
-	char** obj_2 = nullptr;
-	int   size_2 = Search (obj_2);
+	Stack    stk2;
+	Search (&stk2);
+	int size2 = stk2.get_size ();
 
-	int min = size_2 < size_1? size_2: size_1;
-	int max = size_2 > size_1? size_2: size_1;
-
-	char** dif1 = (char**) calloc (min, sizeof(char*));
-	char** dif2 = (char**) calloc (min, sizeof(char*));
-
-	int size_d = 0;
-
-	//system("echo \"Objects are same in\" | festival --tts");
 	printf ("Objects are same in:\n");
 
-	for(int i = 0; i < min; i++)
+	Node* curr = head_;
+
+	int diff = 0;
+
+	for( ; diff < size1 && diff < size2; diff++)
 	{
-		if(!strcmp (obj_2[i], obj_1[i]))
-			printf ("{%s}  ", obj_1[i]);
-		else
-		{
-			dif1[size_d] = obj_1[i];
-			dif2[size_d] = obj_2[i];
-			size_d++;
-		}
+		if(stk1[diff] == stk2[diff])
+			curr = curr->compare_(stk1, &diff);
+		else break;
 	}
 
-	printf ("\n");
+	Node* tmp = curr;
 
-	if(size_d > 0 || min != max)
-	{
-		//system("echo \"Objects are different in\" | festival --tts");
-		printf ("Objects are different in:\n");
+	printf ("\nObjects are different in:\n");
 
-		for(int i = 0; i < size_d; i++)
-			printf ("{%s}  ", dif1[i]);
+	for(int m = diff; m < size1; m++)
+		curr = curr->compare_(stk1, &m);
 
-		if(max == size_1)
-			for(int i = min; i < max; i++)
-				printf ("{%s}  ", obj_1[i]);
+	printf("\n");
 
-		printf("\n");
+	curr = tmp;
 
-		for(int i = 0; i < size_d; i++)
-			printf ("{%s}  ", dif2[i]);
+	for(int n = diff; n < size2; n++)
+		curr = curr->compare_(stk2, &n);
 
-		if(max == size_2)
-			for(int i = min; i < max; i++)
-				printf ("{%s}  ", obj_2[i]);
-
-		printf("\n");
-	}
-
-	free (obj_1);
-	free (obj_2);
-	free (dif1);
-	free (dif2);
+	printf("\n");
 }
 
 //-------------------------------------------------------------------------------
 
-int  Tree::Search (char**& path)
+void  Tree::Search (Stack* stk)
 {
-	char str[SIZE] = {};
+	char str[SIZE] = "";
 
 	fgets (str, SIZE, stdin);
 	str[strlen (str) - 1] = '\0';
 
-	Stack stk;
-
 	int mode = 0;
 
-	head_->search_ (str, &stk, mode);
-
-	int size = stk.get_size ();
-
-	path = (char**) calloc (size + 1, sizeof(char*));
-
-	if(mode == 0)
-	{
-		printf ("There is no \"%s\"\n", str);
-		return 0;
-	}
-	
-	Node* curr = head_;
-
-	path[0] = curr->data_;
-
-	for(int start = 0; start < size; start++)
-	{
-		if(stk[start] == 1)
-			curr = curr->right_;
-		else if(stk[start] == -1)
-			curr = curr->left_;
-
-		path[start + 1] = curr->data_;
-	}
-
-	return size + 1;
+	head_->search_ (str, stk, mode);
 }
 
 //-------------------------------------------------------------------------------
@@ -314,7 +295,6 @@ void Tree::Graph (char* filename)
 
 	if(head_->right_ && head_->left_)
 	{
-
 		head_->g_print_		  (f_graph);
 		head_->left_ ->graph_ (f_graph);
 		head_->right_->graph_ (f_graph);
@@ -331,7 +311,7 @@ void Tree::Graph (char* filename)
 
 //-------------------------------------------------------------------------------
 
-int read (char** symbols, char* filename)
+int read (char** symbols, const char* filename)
 {
 	FILE* base = fopen (filename, "r");
 

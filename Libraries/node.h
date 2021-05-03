@@ -24,4 +24,5 @@ struct Node
 		void walk_	  (char** str, int* cnt);
 		void graph_	  (FILE* f_graph);
 		void g_print_ (FILE* f_graph);
+		Node* compare_(Stack& stk, int* diff);
 };

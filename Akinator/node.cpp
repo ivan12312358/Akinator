@@ -36,7 +36,7 @@ void Node::new_obj_ (char* str)
 	sprintf (left_->data_, "%s", data_);
 	free	(data_);
 
-	system ("echo \"What is your object?\" | festival --tts");
+	//system ("echo \"What is your object?\" | festival --tts");
 	printf ("What is your object?\n");
 	fgets  (str, SIZE, stdin);
 
@@ -98,8 +98,6 @@ void Node::fprint_ (FILE* f_dump)
 
 void Node::search_ (char* str, Stack* stk, int& mode)
 {
-	stk->dump();
-
 	if(!strcmp(str, data_))
 	{
 		mode = 1;

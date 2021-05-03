@@ -23,10 +23,11 @@ class Tree
 		void Save     ();
 		void Save     (const char* filename);
 		void Graph	  (char* filename);
-		int  Search	  (char**& str);
+		void Search	  (Stack* stk);
 		Tree(const Tree& tree) = delete;
 		Tree& operator= (Tree& tree) = delete;
 };
 
+void menu();
 void split(char** str, char* symbols);
-int  read(char** symbols, char* filename);
+int  read(char** symbols, const char* filename);
