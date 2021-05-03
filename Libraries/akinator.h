@@ -29,4 +29,4 @@ class Tree
 };
 
 void split(char** str, char* symbols);
-int read(char** symbols, char* filename);
+int  read(char** symbols, char* filename);

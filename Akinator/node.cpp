@@ -36,8 +36,8 @@ void Node::new_obj_ (char* str)
 	sprintf (left_->data_, "%s", data_);
 	free	(data_);
 
-	system ("echo \"What is your word?\" | festival --tts");
-	printf ("What is your word?\n");
+	system ("echo \"What is your object?\" | festival --tts");
+	printf ("What is your object?\n");
 	fgets  (str, SIZE, stdin);
 
 	right_ 		  = (Node*) calloc(1, sizeof (Node));
@@ -61,8 +61,8 @@ void Node::free_ ()
 {
 	if(left_)  left_ ->free_ ();
 	if(right_) right_->free_ ();
-
-	if(data_) free (data_);
+	if(data_)  free (data_);
+			   free (this);
 }
 
 //-------------------------------------------------------------------------------
@@ -106,21 +106,21 @@ void Node::search_ (char* str, Stack* stk, int& mode)
 		return;
 	}
 
-	if(left_ && mode)
+	if(left_ && !mode)
 	{
 		stk->push(-1);
 		left_->search_(str, stk, mode);
 	
-		if(mode)
+		if(!mode)
 			stk->pop();
 	}
 
-	if(right_ && mode)
+	if(right_ && !mode)
 	{
 		stk->push(1);
 		right_->search_(str, stk, mode);
 	
-		if(mode)
+		if(!mode)
 			stk->pop();
 	}
 }

@@ -7,12 +7,12 @@
 int main (int argc, char* argv[])
 {
 	Tree tree(argv[1]);
-
+		
 //	tree.Akinator ();
 
 //	tree.Find ();
 
-//	tree.Graph(argv[1]);
+	tree.Graph(argv[1]);
 
 //	tree.Compare ();
 
@@ -25,7 +25,7 @@ Tree::Tree ()
 {
 	head_ = (Node*) calloc (1, sizeof (Node));
 
-	system ("echo \"Please, enter first object\" | festival --tts");
+	//system ("echo \"Please, enter first object\" | festival --tts");
 	printf ("Please, enter first object:\n");
 
 	char str[SIZE] = "";
@@ -47,7 +47,7 @@ Tree::Tree (char* filename)
 
 	if(size == 0)
 	{
-		system ("echo \"Empty base!\" | festival --tts");
+		//system ("echo \"Empty base!\" | festival --tts");
 		printf ("Your base is empty! I will use default base.\n");
 
 		size = read (&symbols, "default.base");
@@ -72,12 +72,11 @@ Tree::Tree (char* filename)
 
 Tree::~Tree ()
 {
-	Save("base.log");
+//	Save("base.log");
 
 	assert (head_);
 
 	head_-> free_();
-	head_ = nullptr;
 }
 
 //-------------------------------------------------------------------------------
@@ -107,7 +106,7 @@ void Tree::Akinator ()
 		{	
 			if(curr->right_ == nullptr)
 			{
-				system ("echo \"Wohoo!!! We found it\" | festival --tts");
+				//system ("echo \"Wohoo!!! We found it\" | festival --tts");
 				printf ("Wohoo!!! We found it!\n");
 				curr = head_;
 			} 
@@ -118,7 +117,7 @@ void Tree::Akinator ()
 			break;
 		else
 		{
-			system ("echo \"WRONG COMMAND. Type 'Y' or 'N'\" | festival --tts");			
+			//system ("echo \"WRONG COMMAND. Type 'Y' or 'N'\" | festival --tts");			
 			printf ("WRONG COMMAND. Type 'Y' or 'N':\n");
 		}
 	}
@@ -128,7 +127,7 @@ void Tree::Akinator ()
 
 void Tree::Save ()
 {	
-	system ("echo \"Where to save your database?\" | festival --tts");
+	//system ("echo \"Where to save your database?\" | festival --tts");
 	printf ("Where to save your database?\n");
 
 	char str[SIZE];
@@ -158,7 +157,7 @@ void Tree::Save (const char* filename)
 
 void Tree::Find ()
 {
-	system ("echo \"Enter object that you want to find\" | festival --tts");	
+	//system ("echo \"Enter object that you want to find\" | festival --tts");	
 	printf ("Enter object that you want to find:\n");
 
 	char** path = nullptr;
@@ -167,7 +166,7 @@ void Tree::Find ()
 	if(size < 1)
 		return;
 
-	system ("echo \"Object's path\" | festival --tts");
+	//system ("echo \"Object's path\" | festival --tts");
 	printf ("Object's path:\n");
 
 	for(int i = 0; i < size; i++)
@@ -182,7 +181,7 @@ void Tree::Find ()
 
 void Tree::Compare ()
 {
-	system("echo \"Enter objects that you want to compare\" | festival --tts");
+	//system("echo \"Enter objects that you want to compare\" | festival --tts");
 	printf ("Enter objects that you want to compare:\n");
 
 	char** obj_1 = nullptr;
@@ -199,7 +198,7 @@ void Tree::Compare ()
 
 	int size_d = 0;
 
-	system("echo \"Objects are same in\" | festival --tts");
+	//system("echo \"Objects are same in\" | festival --tts");
 	printf ("Objects are same in:\n");
 
 	for(int i = 0; i < min; i++)
@@ -218,7 +217,7 @@ void Tree::Compare ()
 
 	if(size_d > 0 || min != max)
 	{
-		system("echo \"Objects are different in\" | festival --tts");
+		//system("echo \"Objects are different in\" | festival --tts");
 		printf ("Objects are different in:\n");
 
 		for(int i = 0; i < size_d; i++)
