@@ -4,13 +4,29 @@
 #include <assert.h>
 #include <string.h>
 #include <stdarg.h>
-#define SIZE 128
 
-struct Tree;
+const int SIZE = 128;
+
 struct Node;
-void free_(Node* node_);
-void print_(Node* node_);
-//void add_node(Tree** tree_);
-//void find_(Tree** tree_);
-//void find(Tree** tree_, char* str);
-void node_delete(Node* node_);
+
+class Tree
+{
+	Node* head_ = nullptr;
+
+	public:
+		Tree ();
+		Tree (char* filename);
+	   ~Tree ();
+		void Akinator ();
+		void Find	  ();
+		void Compare  ();
+		void Save     ();
+		void Save     (const char* filename);
+		void Graph	  (char* filename);
+		int  Search	  (char**& str);
+		Tree(const Tree& tree) = delete;
+		Tree& operator= (Tree& tree) = delete;
+};
+
+void split(char** str, char* symbols);
+int read(char** symbols, char* filename);

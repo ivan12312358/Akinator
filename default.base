@@ -1,0 +1,33 @@
+animal
+{
+    math
+    {
+        ovchos
+        {
+        }
+        kind
+        {
+            fupom
+            {
+                polovinkin
+                {
+                }
+                podlipskyi
+                {
+                }
+            }
+            skubachevskyi
+            {
+            }
+        }
+    }
+    green
+    {
+        poltorashka
+        {
+        }
+        frog
+        {
+        }
+    }
+}
