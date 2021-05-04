@@ -28,7 +28,7 @@ void Node::walk_(char** str, int* cnt)
 
 //-------------------------------------------------------------------------------
 
-void Node::new_obj_ (char* str)
+void Node::new_obj_ ()
 {
 	left_ 		  = (Node*) calloc(1, sizeof (Node));
 	left_->data_  = (char*) calloc(strlen (data_) + 1, sizeof (char));
@@ -37,22 +37,20 @@ void Node::new_obj_ (char* str)
 	free	(data_);
 
 	//system ("echo \"What is your object?\" | festival --tts");
-	printf ("What is your object?\n");
-	fgets  (str, SIZE, stdin);
+	print ("What is your object?\n");
+	scan  ();
 
-	right_ 		  = (Node*) calloc(1, sizeof (Node));
-	right_->data_ = (char*) calloc(strlen (str) + 1, sizeof (char));
+	right_ 		  = (Node*) calloc (1, sizeof (Node));
+	right_->data_ = (char*) calloc (strlen (buf) + 1, sizeof (char));
 
-	sprintf (right_->data_, "%s", str);
-	right_->data_[strlen (str) - 1] = '\0';
+	sprintf (right_->data_, "%s", buf);
 
-	printf ("How does a {%s} differ from a {%s}?\n", right_->data_, left_->data_);
-	fgets  (str, SIZE, stdin);
+	sprintf (string, "How does a {%s} differ from a {%s}?\n", right_->data_, left_->data_);
+	print (string);
+	scan  ();
 
-	data_ = (char*) calloc(strlen (str) + 1, sizeof (char));
-	sprintf (data_, "%s", str);
-
-	data_[strlen (str) - 1] = '\0';
+	data_ = (char*) calloc (strlen (buf) + 1, sizeof (char));
+	sprintf (data_, "%s", buf);
 }
 
 //-------------------------------------------------------------------------------
@@ -125,13 +123,25 @@ void Node::search_ (char* str, Stack* stk, int& mode)
 
 //-------------------------------------------------------------------------------
 
+Node* Node::compare_(Stack& stk, int* diff)
+{
+	if(stk[*diff] == -1) print ("Not ");
+
+	sprintf (string, "{%s}  ", data_);
+	print   (string);
+
+	if(stk[*diff] == -1) return left_;
+	else 				 return right_;
+}
+
+//-------------------------------------------------------------------------------
+
 void Node::graph_ (FILE* f_graph)
 {
 	if(left_ == nullptr || right_ == nullptr)
 		return;
 
-	fprintf(f_graph, "\tsubgraph cluster\n\t{\n");
-
+	fprintf  (f_graph, "\tsubgraph cluster\n\t{\n");
 	g_print_ (f_graph);
 
 	 left_->graph_ (f_graph);
@@ -142,7 +152,7 @@ void Node::graph_ (FILE* f_graph)
 
 void Node::g_print_ (FILE* f_graph)
 {
-	fprintf(f_graph, "\t\t%s ->\n\t\t{\n"
+	fprintf (f_graph, "\t\t%s ->\n\t\t{\n"
 	"\t\t\t%s [shape = \"box3d\", fillcolor = red, style = \"filled\"];\n" 
 	"\t\t\t%s [shape = \"box3d\", fillcolor = green, style = \"filled\"];\n\t\t}\n\t}\n",
 																			    data_, 

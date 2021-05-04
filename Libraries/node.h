@@ -6,6 +6,11 @@
 #include <stdarg.h>
 
 extern const int SIZE;
+extern int sock;
+extern char buf[];
+extern char string[];
+extern void print (const char* buffer);
+extern void scan  ();
 
 class Tree;
 struct Stack;
@@ -17,7 +22,7 @@ struct Node
 	Node* right_ = nullptr;
 
 	public:
-		void new_obj_ (char* str);
+		void new_obj_ ();
 		void free_	  ();
 		void fprint_  (FILE* f_dump);
 		void search_  (char* str, Stack* stk, int& mode);
