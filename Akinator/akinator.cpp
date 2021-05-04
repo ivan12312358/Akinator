@@ -159,7 +159,7 @@ Tree::~Tree ()
 
 void Tree::Akinator () 
 {
-	char str[128] = {};
+	char str[SIZE] = "";
 
 	Node* curr = head_;
 
