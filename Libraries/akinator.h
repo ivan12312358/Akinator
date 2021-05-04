@@ -14,20 +14,18 @@ class Tree
 	Node* head_ = nullptr;
 
 	public:
-		Tree ();
-		Tree (char* filename);
+		Tree (const char* filename);
 	   ~Tree ();
 		void Akinator ();
 		void Find	  ();
 		void Compare  ();
 		void Save     ();
-		void Save     (const char* filename);
 		void Graph	  (char* filename);
 		void Search	  (Stack* stk);
 		Tree(const Tree& tree) = delete;
-		Tree& operator= (Tree& tree) = delete;
+		Tree& operator= (Tree& tree);
 };
 
-void menu();
-void split(char** str, char* symbols);
-int  read(char** symbols, const char* filename);
+void Menu  (char* filename);
+void Split (char** str, char* symbols);
+int  Read  (char** symbols, const char* filename);

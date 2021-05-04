@@ -2,67 +2,127 @@
 #include "../Libraries/node.h"
 #include "../Libraries/akinator.h"
 
+enum game_modes
+{
+	Clear = '0',
+	Guessing, 
+	Definition,
+	Compare,
+	Graph,
+	Save,
+	Exit
+};
+
 
 int main (int argc, char* argv[])
 {
-//	menu();
-
-	Tree tree(argv[1]);
-
-	tree.Akinator();
-
-	tree.Graph(argv[1]);
-
-//	tree.Find();
-//	tree.Compare();
+	Menu(argv[1]);
 
 	return 0;
 }
 //-------------------------------------------------------------------------------
 
-void menu()
+void Menu(char* filename)
 {
-
-}
-
-//-------------------------------------------------------------------------------
-
-Tree::Tree ()
-{
-	head_ = (Node*) calloc (1, sizeof (Node));
-
-	//system ("echo \"Please, enter first object\" | festival --tts");
-	printf ("Please, enter first object:\n");
+	printf ("\t\tHello! I am Akinator!\n");
+	system ("echo \"Hello! I am Akinator! Enter base and game mode\" | festival --tts");
 
 	char str[SIZE] = "";
-	fgets (str, SIZE, stdin);
 
-	head_->data_ = (char*) calloc (strlen (str) + 1, sizeof (char));
+	if(!filename)
+	{
+		printf ("Enter name of file with base or \"New\" to use empty base and choose game mode\n\n");
+		fgets  (str, SIZE, stdin);
+		str[strlen(str) - 1] = '\0';
+	}
+	else
+		sprintf(str, "%s", filename);
 
-	sprintf (head_->data_, "%s", str);
+	Tree tree (str);
 
-	head_->data_[strlen (str) - 1] = '\0';
+	char mode[10];
+
+	while(true)
+	{
+		printf ("\t\t\tMENU\n"
+				"0 - Clear terminal\n"
+				"1 - Guessing\n"
+				"2 - Definition\n"
+				"3 - Compare\n"
+				"4 - Graph\n"
+				"5 - Make a save\n"
+				"6 - Exit\n");
+
+		fgets(mode, 10, stdin);
+
+		switch(mode[0])
+		{
+			case (Clear):
+				system("clear");
+				break;
+			case(Guessing):
+				tree.Akinator ();
+				break;
+			case(Definition):
+				tree.Find ();
+				break;
+			case(Compare):
+				tree.Compare ();
+				break;
+			case(Graph):
+				tree.Graph (str);
+				break;
+			case(Save):
+				tree.Save ();
+				break;
+			case(Exit):
+				return;
+				break;
+			default:
+				scanf("%*s");
+				printf("WRONG command. Try again\n");
+		}
+	}
 }
 
 //-------------------------------------------------------------------------------
 
-Tree::Tree (char* filename)
+Tree::Tree (const char* filename)
 {
+	if(!strcmp(filename, "New"))
+	{
+		head_ = (Node*) calloc (1, sizeof (Node));
+
+		//system ("echo \"Please, enter first object\" | festival --tts");
+		printf ("Please, enter first object:\n");
+
+		char str[SIZE] = "";
+		fgets (str, SIZE, stdin);
+
+		head_->data_ = (char*) calloc (strlen (str) + 1, sizeof (char));
+
+		sprintf (head_->data_, "%s", str);
+
+		head_->data_[strlen (str) - 1] = '\0';
+
+		return;
+	}
+
 	char *symbols = nullptr;
-	int size = read (&symbols, filename);
+	int size = Read (&symbols, filename);
 
 	if(size == 0)
 	{
 		//system ("echo \"Empty base!\" | festival --tts");
 		printf ("Your base is empty! I will use default base.\n");
 
-		size = read (&symbols, "default.base");
+		size = Read (&symbols, "default.base");
 	}
 
 	char* tmp = symbols;
 
 	char** str = (char**) calloc (size, sizeof (char*));
-	split (str, symbols);
+	Split (str, symbols);
 
 	head_ = (Node*) calloc (1, sizeof (Node));
 
@@ -78,18 +138,21 @@ Tree::Tree (char* filename)
 
 Tree::~Tree ()
 {
-	system ("echo \"Do you want to save base?\" | festival --tts ");
 	printf ("Do you want to save base? Type [Y/N]\n");
+	system ("echo \"Do you want to save base?\" | festival --tts ");
 
 	char str[SIZE] = "";
 	fgets(str, SIZE, stdin);
 
 	if(!strcmp(str, "Y\n"))
-		Save("saved.base");
+		Save();
 
 	assert (head_);
 
 	head_-> free_();
+
+	printf ("Bye!\n");
+	system ("echo \"Bye\" | festival --tts");
 }
 
 //-------------------------------------------------------------------------------
@@ -99,6 +162,8 @@ void Tree::Akinator ()
 	char str[128] = {};
 
 	Node* curr = head_;
+
+	system("clear");
 
 	while(true)
 	{
@@ -140,6 +205,7 @@ void Tree::Akinator ()
 
 void Tree::Save ()
 {	
+	printf("Saving...\n");
 	//system ("echo \"Where to save your database?\" | festival --tts");
 	printf ("Where to save your database?\n");
 
@@ -151,25 +217,16 @@ void Tree::Save ()
 
 	head_->fprint_ (f_dump);
 
-	fclose (f_dump);	
-}
+	fclose (f_dump);
 
-//-------------------------------------------------------------------------------
-
-void Tree::Save (const char* filename)
-{
-	FILE*   f_dump = fopen (filename, "w");
-	assert (f_dump);
-
-	head_->fprint_ (f_dump);
-
-	fclose (f_dump);	
+	printf("Saved in %s", str);
 }
 
 //-------------------------------------------------------------------------------
 
 void Tree::Find ()
 {
+	system("clear");
 	//system ("echo \"Enter object that you want to find\" | festival --tts");	
 	printf ("Enter object that you want to find:\n");
 
@@ -213,6 +270,8 @@ Node* Node::compare_(Stack& stk, int* diff)
 
 void Tree::Compare ()
 {
+
+	system("clear");
 	//system("echo \"What to compare\" | festival --tts");
 	printf ("Enter objects that you want to compare:\n");
 
@@ -278,6 +337,9 @@ void Tree::Graph (char* filename)
 		return;
 	}
 
+	system("clear");
+	printf("Making graph...\n");
+
 	FILE*   f_graph = fopen ("graph.dot", "w");
 	assert (f_graph);
 
@@ -311,7 +373,7 @@ void Tree::Graph (char* filename)
 
 //-------------------------------------------------------------------------------
 
-int read (char** symbols, const char* filename)
+int Read (char** symbols, const char* filename)
 {
 	FILE* base = fopen (filename, "r");
 
@@ -338,7 +400,7 @@ int read (char** symbols, const char* filename)
 
 //-------------------------------------------------------------------------------
 
-void split (char** str, char* symbols)
+void Split (char** str, char* symbols)
 {
 	symbols = strtok (symbols, " \n");
 
