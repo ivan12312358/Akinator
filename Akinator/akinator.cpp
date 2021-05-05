@@ -13,7 +13,7 @@ void Menu (char* filename)
 
 	if(!filename)
 	{
-		print ("Enter name of file with base or \"New\" to use empty base and choose game mode\n\n");
+		print ("Enter name of file with base or type \"New\" to use empty base and choose game mode\n\n");
 		scan  ();
 	}
 	else

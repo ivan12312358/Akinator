@@ -36,7 +36,22 @@ int main(int argc, char* argv[1])
 			exit(3);
 		}
 
-		Menu(nullptr);
+        switch(fork())
+        {
+        case -1:
+            perror("fork");
+            break;
+            
+        case 0:
+            close(listener);
+            Menu(nullptr);
+            close(sock);
+            _exit(0);
+            
+        default:
+            close(sock);
+        }
+
 	}
 	
 	return 0;
